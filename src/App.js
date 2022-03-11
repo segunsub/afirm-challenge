@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import EmptyStar from './assets/empty-star.svg';
 import './styles.css';
 import FilledStar from './assets/filled-star.svg';
@@ -8,7 +8,7 @@ const RatingSystem = () => {
     current: 0,
     prev: 0
   })
-  const [count,setCount] = useState(0)
+  const [count,setCount] = useState(1)
   const [starChange,setStarChange] = useState({
     1:EmptyStar,
     2:EmptyStar,
@@ -33,9 +33,7 @@ const RatingSystem = () => {
       for(let i=0; i <= star.current; i++) {
         copy[i] = FilledStar
       }
-      console.log(star,'dup')
       if(star.current === star.prev) {
-        console.log('twice')
         copy[star.current] = EmptyStar
       }
       setStarChange(copy)
@@ -48,13 +46,15 @@ const RatingSystem = () => {
   }, [star])
   
   const HandleStarClick = (e) => {
+    e.persist()
     const copy = {...star}
-    setCount((prev) => prev + 1)
-    if(count >= 2) {
+    if(count === 2) {
       copy.prev = copy.current
-    }else {
-      setCount(0)
+    }else if(count > 2){
+      setCount(1)
     }
+    setCount((prev) => prev+1)
+
     copy.current = e._targetInst.key
     setStar(copy)
   
